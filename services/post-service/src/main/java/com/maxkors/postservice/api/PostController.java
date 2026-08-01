@@ -20,7 +20,7 @@ public class PostController {
     }
 
     // for testing purposes
-    @GetMapping("/all")
+    @GetMapping
     public List<PostDTO> getAll() {
         return postService.getAll();
     }
