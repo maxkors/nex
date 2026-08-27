@@ -23,12 +23,17 @@ public class PostController {
     @GetMapping
     public List<PostDTO> getAll() {
         return postService.getAll();
-    }
+    }  
 
     @GetMapping("/{id}")
     public ResponseEntity<PostDTO> getById(@PathVariable Long id) {
         return postService.getById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/author/{authorId}")
+    public ResponseEntity<List<PostDTO>> getAllByAuthorId(@PathVariable Long authorId) {
+        return ResponseEntity.ok(postService.getAllByAuthorId(authorId));
+    }  
 
     @PostMapping
     public ResponseEntity<PostDTO> create(@Valid @RequestBody PostDTO postDTO) {
@@ -46,4 +51,8 @@ public class PostController {
         return ResponseEntity.noContent().<Void>build();
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<PostDTO>> search(@RequestParam String query) {
+        return ResponseEntity.ok(postService.search(query));
+    }
 }

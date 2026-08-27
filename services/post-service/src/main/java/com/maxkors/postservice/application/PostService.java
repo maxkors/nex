@@ -24,8 +24,16 @@ public class PostService {
         return postRepository.findAll().stream().map(PostDTO::from).collect(Collectors.toList());
     }
 
+    public List<PostDTO> getAllByAuthorId(Long authorId) {
+        return postRepository.findAllByAuthorId(authorId).stream().map(PostDTO::from).collect(Collectors.toList());
+    }
+
     public Optional<PostDTO> getById(Long id) {
         return postRepository.findById(id).map(PostDTO::from);
+    }
+
+    public List<PostDTO> search(String text) {
+        return postRepository.findAllByTextContaining(text).stream().map(PostDTO::from).collect(Collectors.toList());
     }
 
     @Transactional
@@ -44,7 +52,6 @@ public class PostService {
     @Transactional
     public PostDTO update(Long id, PostDTO postDTO) {
         Post post = postRepository.findById(id).orElseThrow(() -> new PostNotFoundException(id));
-        post.setAuthorId(postDTO.authorId());
         post.setText(postDTO.text());
         return PostDTO.from(post);
     }

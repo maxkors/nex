@@ -1,5 +1,7 @@
 package com.maxkors.postservice.domain;
 
+import java.time.Instant;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,4 +33,10 @@ public class Post {
 
     @Column(name = "text", nullable = false)
     private String text;
+
+    @Column(name = "likes", nullable = false)
+    private Long likes;
+
+    @Column(name = "created_at", nullable = false)
+    private Instant createdAt;
 }
