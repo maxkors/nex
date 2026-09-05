@@ -1,6 +1,7 @@
 package com.maxkors.postservice.application;
 
-import com.maxkors.postservice.api.PostDTO;
+import com.maxkors.postservice.api.PostRequest;
+import com.maxkors.postservice.api.PostResponse;
 import com.maxkors.postservice.domain.Post;
 import com.maxkors.postservice.infrastructure.PostRepository;
 import org.springframework.stereotype.Service;
@@ -20,27 +21,27 @@ public class PostService {
         this.postRepository = postRepository;
     }
 
-    public List<PostDTO> getAll() {
-        return postRepository.findAll().stream().map(PostDTO::from).collect(Collectors.toList());
+    public List<PostResponse> getAll() {
+        return postRepository.findAll().stream().map(PostResponse::from).collect(Collectors.toList());
     }
 
-    public List<PostDTO> getAllByAuthorId(Long authorId) {
-        return postRepository.findAllByAuthorId(authorId).stream().map(PostDTO::from).collect(Collectors.toList());
+    public List<PostResponse> getAllByAuthorId(Long authorId) {
+        return postRepository.findAllByAuthorId(authorId).stream().map(PostResponse::from).collect(Collectors.toList());
     }
 
-    public Optional<PostDTO> getById(Long id) {
-        return postRepository.findById(id).map(PostDTO::from);
+    public Optional<PostResponse> getById(Long id) {
+        return postRepository.findById(id).map(PostResponse::from);
     }
 
-    public List<PostDTO> search(String text) {
-        return postRepository.findAllByTextContaining(text).stream().map(PostDTO::from).collect(Collectors.toList());
+    public List<PostResponse> search(String text) {
+        return postRepository.findAllByTextContaining(text).stream().map(PostResponse::from).collect(Collectors.toList());
     }
 
     @Transactional
-    public PostDTO create(PostDTO postDTO) {
-        Post post = new Post(postDTO.authorId(), postDTO.text());
+    public PostResponse create(PostRequest postRequest) {
+        Post post = new Post(postRequest.authorId(), postRequest.text());
         Post savedPost = postRepository.save(post);
-        return PostDTO.from(savedPost);
+        return PostResponse.from(savedPost);
     }
 
     @Transactional
@@ -50,9 +51,10 @@ public class PostService {
     }
 
     @Transactional
-    public PostDTO update(Long id, PostDTO postDTO) {
+    public PostResponse update(Long id, PostRequest postRequest) {
         Post post = postRepository.findById(id).orElseThrow(() -> new PostNotFoundException(id));
-        post.setText(postDTO.text());
-        return PostDTO.from(post);
+        post.setText(postRequest.text());
+        return PostResponse.from(post);
     }
+
 }

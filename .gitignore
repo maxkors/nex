@@ -71,3 +71,5 @@ pnpm-lock.yaml.*
 **/.temp/
 *.pid
 *.seed
+
+AGENTS.md

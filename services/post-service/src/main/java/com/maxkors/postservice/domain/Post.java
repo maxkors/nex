@@ -34,8 +34,8 @@ public class Post {
     @Column(name = "text", nullable = false)
     private String text;
 
-    @Column(name = "likes", nullable = false)
-    private Long likes;
+    @Column(name = "like_count", nullable = false)
+    private Long like_count;
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;

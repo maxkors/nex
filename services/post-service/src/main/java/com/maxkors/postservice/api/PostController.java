@@ -21,28 +21,28 @@ public class PostController {
 
     // for testing purposes
     @GetMapping
-    public List<PostDTO> getAll() {
+    public List<PostResponse> getAll() {
         return postService.getAll();
-    }  
+    }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<PostResponse> getById(@PathVariable Long id) {
         return postService.getById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/author/{authorId}")
-    public ResponseEntity<List<PostDTO>> getAllByAuthorId(@PathVariable Long authorId) {
+    public ResponseEntity<List<PostResponse>> getAllByAuthorId(@PathVariable Long authorId) {
         return ResponseEntity.ok(postService.getAllByAuthorId(authorId));
-    }  
+    }
 
     @PostMapping
-    public ResponseEntity<PostDTO> create(@Valid @RequestBody PostDTO postDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(postService.create(postDTO));
+    public ResponseEntity<PostResponse> create(@Valid @RequestBody PostRequest postRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(postService.create(postRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostDTO> update(@PathVariable Long id, @Valid @RequestBody PostDTO postDTO) {
-        return ResponseEntity.ok(postService.update(id, postDTO));
+    public ResponseEntity<PostResponse> update(@PathVariable Long id, @Valid @RequestBody PostRequest postRequest) {
+        return ResponseEntity.ok(postService.update(id, postRequest));
     }
 
     @DeleteMapping("/{id}")
@@ -52,7 +52,7 @@ public class PostController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<PostDTO>> search(@RequestParam String query) {
+    public ResponseEntity<List<PostResponse>> search(@RequestParam String query) {
         return ResponseEntity.ok(postService.search(query));
     }
 }
