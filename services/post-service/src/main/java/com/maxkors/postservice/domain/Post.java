@@ -2,12 +2,7 @@ package com.maxkors.postservice.domain;
 
 import java.time.Instant;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,13 +14,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Post {
 
-    public Post(Long authorId, String text) {
-        this.authorId = authorId;
-        this.text = text;
-    }
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "post_seq_gen")
+    @SequenceGenerator(name = "post_seq_gen", sequenceName = "posts_id_seq", allocationSize = 1)
     private Long id;
 
     @Column(name = "author_id", nullable = false)
@@ -39,4 +30,11 @@ public class Post {
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
+
+    public Post(Long authorId, String text) {
+        this.authorId = authorId;
+        this.text = text;
+        this.like_count = 0L;
+        this.createdAt = Instant.now();
+    }
 }

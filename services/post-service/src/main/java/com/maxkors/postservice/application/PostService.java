@@ -2,7 +2,9 @@ package com.maxkors.postservice.application;
 
 import com.maxkors.postservice.api.PostRequest;
 import com.maxkors.postservice.api.PostResponse;
+import com.maxkors.postservice.domain.Like;
 import com.maxkors.postservice.domain.Post;
+import com.maxkors.postservice.infrastructure.LikeRepository;
 import com.maxkors.postservice.infrastructure.PostRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,9 +18,11 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final LikeRepository likeRepository;
 
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository, LikeRepository likeRepository) {
         this.postRepository = postRepository;
+        this.likeRepository = likeRepository;
     }
 
     public List<PostResponse> getAll() {
@@ -57,4 +61,17 @@ public class PostService {
         return PostResponse.from(post);
     }
 
+    @Transactional
+    public PostResponse toggleLike(Long postId, Long userId) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(postId));
+        Optional<Like> existing = likeRepository.findByUserIdAndPostId(userId, postId);
+        long delta = existing.isPresent() ? -1L : 1;
+        if (existing.isPresent()) {
+            likeRepository.delete(existing.get());
+        } else {
+            likeRepository.save(new Like(userId, postId));
+        }
+        post.setLike_count(post.getLike_count() + delta);
+        return PostResponse.from(post);
+    }
 }
