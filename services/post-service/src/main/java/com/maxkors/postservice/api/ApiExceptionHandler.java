@@ -1,6 +1,7 @@
 package com.maxkors.postservice.api;
 
 import com.maxkors.postservice.application.PostNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,6 +12,11 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(PostNotFoundException.class)
     public ResponseEntity<?> handlePostNotFoundException(PostNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<?> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 }
