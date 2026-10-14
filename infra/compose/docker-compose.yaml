@@ -1,9 +1,9 @@
 services:
-  posts-db:
+  social-db:
     image: postgres:18-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_DB: posts_db
+      POSTGRES_DB: social_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
